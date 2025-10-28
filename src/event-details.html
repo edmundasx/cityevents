@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Renginio informacija - CityEvents">
+    <title>Renginio Informacija - CityEvents</title>
+    <link rel="stylesheet" href="event.css">
+</head>
+<body>
+<header class="header">
+    <div class="header-content">
+        <a href="index.html" class="logo">CityEvents</a>
+        <a href="index.html" class="back-link">← Grįžti į pagrindinį</a>
+    </div>
+</header>
+
+<div class="container" id="eventContainer">
+    <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=450&fit=crop" alt="Vasaros Muzikos Festivalis 2025" class="event-hero">
+
+    <div class="event-header">
+        <span class="event-category">Muzika</span>
+        <h1 class="event-title">Vasaros Muzikos Festivalis 2025</h1>
+    </div>
+
+    <div class="event-content">
+        <div class="event-details">
+            <div class="detail-section">
+                <h2>Apie renginį</h2>
+                <p>Prisijunkite prie nepamirštamo vasaros muzikos festivalio su geriausiais vietiniais ir tarptautiniais atlikėjais. Mėgaukitės įvairia muzika nuo roko iki džiazo, skaniu maistu ir nuostabia atmosfera gražiausioje Niujorko vietoje - Centriniame parke.</p>
+            </div>
+
+            <div class="detail-section">
+                <h2>Renginio informacija</h2>
+                <div class="info-item">
+                    <strong>Data:</strong> Šeštadienis, Birželio 15
+                </div>
+                <div class="info-item">
+                    <strong>Laikas:</strong> 14:00
+                </div>
+                <div class="info-item">
+                    <strong>Vieta:</strong> Centrinis Parkas, Niujorkas
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2>Kas jūsų laukia</h2>
+                <ul class="event-features">
+                    <li>Pasirodymai 3 skirtingose scenose</li>
+                    <li>15+ vietinių ir tarptautinių atlikėjų</li>
+                    <li>Maisto kiemas su 20+ restoranų</li>
+                    <li>Meno instaliacijų zona</li>
+                    <li>Šeimoms skirtos pramogų zonos</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="event-sidebar">
+            <div class="price-card">
+                <div class="price">45 €</div>
+                <button class="btn btn-primary" onclick="bookTicket()">Įsigyti bilietus</button>
+                <button class="btn btn-secondary" onclick="shareEvent()">Dalintis</button>
+            </div>
+
+            <div class="organizer-card">
+                <div class="organizer-title">Organizatorius</div>
+                <div class="organizer-name">NYC Muzikos Renginiai</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

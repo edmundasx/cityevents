@@ -114,3 +114,22 @@ document.getElementById('locationInput').addEventListener('keypress', function (
 window.addEventListener('DOMContentLoaded', function () {
     setTimeout(() => renderEvents(events), 500);
 });
+
+function bookTicket() {
+    alert('Bilietų pirkimo funkcija bus pridėta netrukus!');
+}
+
+function shareEvent() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Vasaros Muzikos Festivalis 2025 - CityEvents',
+            text: 'Prisijunk prie vasaros muzikos festivalio Niujorke!',
+            url: window.location.href
+        }).catch(err => console.log('Klaida dalijantis:', err));
+    } else {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url)
+            .then(() => alert('Nuoroda nukopijuota į iškarpinę!'))
+            .catch(() => alert('Dalijimosi funkcija nepalaikoma šioje naršyklėje.'));
+    }
+}
