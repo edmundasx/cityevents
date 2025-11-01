@@ -10,3 +10,8 @@ For Organizers: This is your control center. It lets you quickly create, manage,
 For Residents & Visitors: This is your essential guide. It's the simplest way to see the city's heartbeat—discover exciting activities, get the full details, and plan your social calendar.
 
 We built this platform to dramatically improve the visibility and transparency of events, creating a single, reliable place for discovery.
+
+Komandos nariai:
+Edmundas Kaminskas
+Amelija Petkutė
+Erenestas Granauskas
