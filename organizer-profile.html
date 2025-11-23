@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizatoriaus profilis - CityEvents</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="organizer-profile">
+<header class="header">
+    <div class="header-content">
+        <a href="index.html" class="logo">City Events</a>
+        <nav class="nav">
+            <a href="index.html#events">Renginiai</a>
+            <a href="organizer-events.html">Mano renginiai</a>
+            <a href="edit-profile.html">Profilis</a>
+        </nav>
+        <a class="btn btn-outline" href="signup.html">Prisijungti</a>
+    </div>
+</header>
+
+<main class="page">
+    <section class="page-header">
+        <div>
+            <p class="eyebrow">Organizatoriaus profilis</p>
+            <h1>Sustiprinkite savo patikimumą</h1>
+            <p class="muted">Papildykite informaciją apie organizaciją, kad lankytojai jus atpažintų.</p>
+        </div>
+        <a class="btn btn-outline" href="organizer-events.html">Peržiūrėti mano renginius</a>
+    </section>
+
+    <section class="card wide">
+        <form id="organizerProfileForm" class="form-grid">
+            <div class="form-group">
+                <label for="orgName">Vardas / Organizacijos pavadinimas</label>
+                <input type="text" id="orgName" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="orgEmail">El. paštas</label>
+                <input type="email" id="orgEmail" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="orgCity">Miestas</label>
+                <input type="text" id="orgCity" name="city" placeholder="Vilnius">
+            </div>
+            <div class="form-group">
+                <label for="orgPhone">Kontaktinis telefonas</label>
+                <input type="tel" id="orgPhone" name="phone" placeholder="+370...">
+            </div>
+            <div class="form-group">
+                <label for="orgWebsite">Interneto svetainė</label>
+                <input type="url" id="orgWebsite" name="organization" placeholder="https://">
+            </div>
+            <div class="form-group">
+                <label for="orgInterests">Renginių kryptys</label>
+                <input type="text" id="orgInterests" name="interests" placeholder="koncertai, konferencijos, sportas">
+            </div>
+            <div class="form-group">
+                <label for="orgPassword">Slaptažodis</label>
+                <input type="password" id="orgPassword" name="password" placeholder="Palikite tuščią jei nekeičiate">
+            </div>
+            <div class="form-group full">
+                <label for="orgBio">Aprašymas</label>
+                <textarea id="orgBio" name="bio" rows="4" placeholder="Trumpai apie organizaciją"></textarea>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit">Išsaugoti</button>
+                <div class="form-message" id="organizerProfileMessage"></div>
+            </div>
+        </form>
+    </section>
+</main>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Renginio informacija - CityEvents">
+    <title>Renginio Informacija - CityEvents</title>
+    <link rel="stylesheet" href="assets/css/event.css">
+</head>
+<body data-page="details">
+<header class="header">
+    <div class="header-content">
+        <a href="index.html" class="logo">CityEvents</a>
+        <a href="index.html" class="back-link">← Grįžti į pagrindinį</a>
+    </div>
+</header>
+
+<div class="container" id="eventContainer">
+    <img id="eventHero" src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=450&fit=crop" alt="Renginys" class="event-hero">
+
+    <div class="event-header">
+        <span class="event-category" id="eventCategory">Renginys</span>
+        <h1 class="event-title" id="eventTitle">Renginio pavadinimas</h1>
+    </div>
+
+    <div class="event-content">
+        <div class="event-details">
+            <div class="detail-section">
+                <h2>Apie renginį</h2>
+                <p id="eventDescription">Kraunama renginio informacija...</p>
+            </div>
+
+            <div class="detail-section">
+                <h2>Renginio informacija</h2>
+                <div class="info-item" id="eventDate">Data: —</div>
+                <div class="info-item" id="eventTime">Laikas: —</div>
+                <div class="info-item" id="eventLocation">Vieta: —</div>
+            </div>
+
+            <div class="detail-section">
+                <h2>Kas jūsų laukia</h2>
+                <ul class="event-features" id="eventFeatures">
+                    <li>Įkeliama...</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="event-sidebar">
+            <div class="price-card">
+                <div class="price" id="eventPrice">0 €</div>
+                <button class="btn btn-primary" id="btnAttend">Pažymėti, kad dalyvausite</button>
+                <button class="btn btn-secondary" id="btnFavorite">Pridėti į mėgstamus</button>
+            </div>
+
+            <div class="organizer-card">
+                <div class="organizer-title">Organizatorius</div>
+                <div class="organizer-name" id="eventOrganizer">—</div>
+                <div class="organizer-title" style="margin-top: 1rem;">Būsena</div>
+                <div class="organizer-name" id="eventStatus">—</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>

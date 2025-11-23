@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityEvents - Administratorius</title>
+    <meta name="description" content="Peržiūrėkite ir valdydkite renginių paraiškas.">
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body data-page="admin">
+    <header class="admin-header">
+        <h1>Administratoriaus skydelis</h1>
+        <p>Patvirtinkite ar atminkite pateiktus renginius, blokuokite pažeidėjus.</p>
+    </header>
+
+    <section class="stats-section">
+        <div class="stats-grid" id="adminStats">
+            <div class="stat-card">
+                <div class="stat-icon">🗂️</div>
+                <div class="stat-value" id="statPending">0</div>
+                <div class="stat-label">Laukiančių peržiūros</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="statApproved">0</div>
+                <div class="stat-label">Patvirtinta</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🚫</div>
+                <div class="stat-value" id="statRejected">0</div>
+                <div class="stat-label">Atmesta / užblokuota</div>
+            </div>
+        </div>
+    </section>
+
+    <main class="main">
+        <div class="table-actions">
+            <h2>Pateikti renginiai</h2>
+            <input type="search" id="adminSearch" placeholder="Filtruoti pagal pavadinimą ar vietą">
+        </div>
+        <div class="table-wrapper">
+            <table class="events-table" id="adminEventsTable">
+                <thead>
+                    <tr>
+                        <th>Pavadinimas</th>
+                        <th>Organizatorius</th>
+                        <th>Data</th>
+                        <th>Vieta</th>
+                        <th>Būsena</th>
+                        <th>Veiksmai</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="6" class="empty">Įkeliama...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Events – Atrask renginius, kurie tau patinka</title>
+    <meta name="description" content="Rask ir dalyvauk renginiuose, naršyk organizatorius arba sukurk savo renginį. Atrask muzikos, meno, verslo, maisto ir kitų sričių renginius.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+z0ympK0tZbFdK4JeayQMZTcWd3vgXn8fLJXYM/to=" crossorigin="">
+</head>
+<body data-page="home">
+<header class="header">
+    <div class="header-content">
+        <a href="#" class="logo">City Events</a>
+        <nav class="nav">
+            <a href="#events">Naršyti renginius</a>
+            <a href="#create">Sukurti renginį</a>
+            <a href="#map">Žemėlapis</a>
+        </nav>
+        <div style="display: flex; gap: 0.5rem;">
+            <a class="btn btn-outline" href="signup.html">Prisijungti</a>
+            <a class="btn btn-primary" href="signup.html">Registruotis</a>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-map">
+        <iframe title="CityEvents žemėlapis" loading="lazy" allowfullscreen
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11726.80211415098!2d25.270995520660346!3d54.68715549788121!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46dd93f23f41b1af%3A0x400d18c7e101770!2sVilnius!5e0!3m2!1slt!2slt!4v1700000000000"></iframe>
+    </div>
+    <div class="hero-content">
+        <h1>Atrask renginius viskam, ką mėgsti</h1>
+        <p>Rask ir dalyvauk renginiuose, bendrauk su organizatoriais arba sukurk savo renginį</p>
+
+        <div class="search-box">
+            <input type="text" class="search-input" placeholder="Ieškoti renginių" id="searchInput">
+            <input type="text" class="search-input" placeholder="Vieta" id="locationInput">
+            <button class="btn btn-primary" id="searchButton">Ieškoti</button>
+        </div>
+    </div>
+</section>
+
+<section class="categories">
+    <div class="categories-content">
+        <div class="category" data-category="music">
+            <span class="category-icon">🎵</span>
+            <span class="category-label">Muzika</span>
+        </div>
+        <div class="category" data-category="arts">
+            <span class="category-icon">🎨</span>
+            <span class="category-label">Menas</span>
+        </div>
+        <div class="category" data-category="charity">
+            <span class="category-icon">❤️</span>
+            <span class="category-label">Labdara</span>
+        </div>
+        <div class="category" data-category="business">
+            <span class="category-icon">💼</span>
+            <span class="category-label">Verslas</span>
+        </div>
+        <div class="category" data-category="education">
+            <span class="category-icon">📚</span>
+            <span class="category-label">Švietimas</span>
+        </div>
+        <div class="category" data-category="food">
+            <span class="category-icon">🍽️</span>
+            <span class="category-label">Maistas ir gėrimai</span>
+        </div>
+    </div>
+</section>
+
+<section class="events-section" id="events">
+    <div class="section-header">
+        <div>
+            <h2>Renginiai tavo mieste</h2>
+            <p>Atrask įdomiausius įvykius šalia tavęs</p>
+        </div>
+        <button class="btn btn-outline" id="resetFilters">Peržiūrėti visus</button>
+    </div>
+
+    <div class="events-grid" id="eventsGrid">
+        <div class="loading">Įkeliami renginiai...</div>
+    </div>
+</section>
+
+<section class="actions" id="create">
+    <div class="actions-grid">
+        <div class="card">
+            <div class="card-header">
+                <h3>Užregistruok naują renginį</h3>
+                <p>Užpildyk formą ir pateik peržiūrai. Administratoriai patvirtins arba atmes paraišką.</p>
+            </div>
+            <form id="createEventForm" class="form-grid">
+                <div class="form-group">
+                    <label for="eventTitle">Pavadinimas</label>
+                    <input type="text" id="eventTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDescription">Aprašymas</label>
+                    <textarea id="eventDescription" name="description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="eventCategory">Kategorija</label>
+                    <select id="eventCategory" name="category" required>
+                        <option value="">Pasirinkite</option>
+                        <option value="music">Muzika</option>
+                        <option value="arts">Menas</option>
+                        <option value="charity">Labdara</option>
+                        <option value="business">Verslas</option>
+                        <option value="education">Švietimas</option>
+                        <option value="food">Maistas ir gėrimai</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Data ir laikas</label>
+                    <input type="datetime-local" id="eventDate" name="event_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventLocation">Vieta</label>
+                    <input type="text" id="eventLocation" name="location" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventPrice">Kaina (€)</label>
+                    <input type="number" id="eventPrice" name="price" min="0" step="0.01" placeholder="0 (nemokamai)">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="eventLat">Platuma</label>
+                        <input type="text" id="eventLat" name="lat" placeholder="54.6872">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventLng">Ilguma</label>
+                        <input type="text" id="eventLng" name="lng" placeholder="25.2797">
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Pateikti peržiūrai</button>
+                <div class="form-message" id="createEventMessage"></div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Jūsų renginiai</h3>
+                <p>Peržiūrėkite pateiktus renginius ir jų patvirtinimo būsenas.</p>
+            </div>
+            <div id="organizerEvents" class="vertical-list">
+                <div class="loading">Įkeliami duomenys...</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="actions">
+    <div class="actions-grid">
+        <div class="card">
+            <div class="card-header">
+                <h3>Rekomenduojami renginiai</h3>
+                <p>Pagal jūsų mėgstamas kategorijas.</p>
+            </div>
+            <div id="recommendations" class="vertical-list">
+                <div class="loading">Įkeliami pasiūlymai...</div>
+            </div>
+        </div>
+        <div class="card" id="mapCard">
+            <div class="card-header">
+                <h3>Renginiai žemėlapyje</h3>
+                <p>Rask renginius šalia savęs.</p>
+            </div>
+            <div id="map" class="map"></div>
+        </div>
+    </div>
+</section>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7kP5qL1aQW2Niqn1ytY1/6ae2q3X1gjp3pqt8M=" crossorigin=""></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

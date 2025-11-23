@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mano renginiai - CityEvents</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="organizer-events">
+<header class="header">
+    <div class="header-content">
+        <a href="index.html" class="logo">City Events</a>
+        <nav class="nav">
+            <a href="index.html#create">Sukurti renginį</a>
+            <a href="organizer-profile.html">Organizatoriaus profilis</a>
+            <a href="edit-profile.html">Dalyvio profilis</a>
+        </nav>
+        <a class="btn btn-outline" href="signup.html">Prisijungti</a>
+    </div>
+</header>
+
+<main class="page">
+    <section class="page-header">
+        <div>
+            <p class="eyebrow">Organizatoriaus suvestinė</p>
+            <h1>Mano renginiai ir būsenos</h1>
+            <p class="muted">Stebėkite patvirtinimus, suplanuokite kitus renginius ir apžvelkite istoriją.</p>
+        </div>
+        <a class="btn btn-primary" href="index.html#create">+ Naujas renginys</a>
+    </section>
+
+    <section class="card wide">
+        <div class="list-toolbar">
+            <div>
+                <strong>Filtras:</strong>
+                <button class="chip" data-filter="all">Visi</button>
+                <button class="chip" data-filter="pending">Laukia</button>
+                <button class="chip" data-filter="approved">Patvirtinti</button>
+                <button class="chip" data-filter="rejected">Atmesti</button>
+            </div>
+            <span class="muted" id="organizerEventsCount"></span>
+        </div>
+
+        <div class="list-columns">
+            <div>
+                <h3>Artėjantys renginiai</h3>
+                <div id="upcomingEvents" class="vertical-list compact">
+                    <div class="loading">Įkeliami duomenys...</div>
+                </div>
+            </div>
+            <div>
+                <h3>Įvykę renginiai</h3>
+                <div id="pastEvents" class="vertical-list compact">
+                    <div class="loading">Įkeliami duomenys...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<script src="assets/js/app.js"></script>
+</body>
+</html>
