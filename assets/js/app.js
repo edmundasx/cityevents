@@ -47,6 +47,89 @@ function buildQuery(params = {}) {
     return search.toString();
 }
 
+function initLoginModal() {
+    if (document.getElementById('loginModal')) return;
+
+    const modalWrapper = document.createElement('div');
+    modalWrapper.innerHTML = `
+        <div class="login-modal" id="loginModal" aria-hidden="true">
+            <div class="login-backdrop" data-login-close></div>
+            <div class="login-dialog" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+                <button class="login-close" type="button" data-login-close aria-label="Uždaryti">×</button>
+                <h3 id="loginTitle">Prisijungimas</h3>
+                <p>Įveskite savo el. paštą ir slaptažodį, kad tęstumėte.</p>
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">El. paštas</label>
+                        <input type="email" id="loginEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Slaptažodis</label>
+                        <input type="password" id="loginPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginRole">Rolė</label>
+                        <select id="loginRole" name="role">
+                            <option value="user">Dalyvis</option>
+                            <option value="organizer">Organizatorius</option>
+                        </select>
+                    </div>
+                    <div class="login-actions">
+                        <button type="button" class="btn-secondary" data-login-close>Atšaukti</button>
+                        <button type="submit" class="btn btn-primary">Prisijungti</button>
+                    </div>
+                    <div class="login-message" id="loginMessage"></div>
+                </form>
+            </div>
+        </div>
+    `.trim();
+
+    const modal = modalWrapper.firstElementChild;
+    document.body.appendChild(modal);
+
+    const form = modal.querySelector('#loginForm');
+    const message = modal.querySelector('#loginMessage');
+
+    function toggleLogin(open) {
+        modal.classList.toggle('open', open);
+        modal.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (open) {
+            message.textContent = '';
+            modal.querySelector('#loginEmail')?.focus();
+        }
+    }
+
+    modal.querySelectorAll('[data-login-close]').forEach(btn => {
+        btn.addEventListener('click', () => toggleLogin(false));
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const email = formData.get('email');
+        const role = formData.get('role') || 'user';
+        const name = (email?.toString().split('@')[0] || 'Vartotojas');
+
+        saveUser({
+            id: Date.now(),
+            email,
+            name,
+            role,
+        });
+
+        message.textContent = `Prisijungta kaip ${name}`;
+        form.reset();
+        setTimeout(() => toggleLogin(false), 800);
+    });
+
+    document.querySelectorAll('.js-login-trigger').forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleLogin(true);
+        });
+    });
+}
+
 function renderEvents(events = []) {
     const container = document.getElementById('eventsGrid');
     if (!container) return;
@@ -575,6 +658,7 @@ function initHomePage() {
 
 function init() {
     const page = document.body.dataset.page;
+    initLoginModal();
     switch (page) {
         case 'home':
             initHomePage();
