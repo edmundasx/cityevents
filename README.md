@@ -32,7 +32,9 @@
 
 Pastaba: CSS paletė (oranžiniai ir rožiniai gradientai) išlaikyta iš pradinio prototipo.
 
-Komandos nariai:
-Edmundas Kaminskas
-Amelija Petkutė
-Erenestas Granauskas
+## Demo paskyros
+- Vartotojas: `user@cityevents.test` / slaptažodis `user`
+- Administratorius: `admin@cityevents.test` / slaptažodis `admin`
+- Organizatorius: `organizer@cityevents.test` / slaptažodis `organizer`
+
+Papildomi puslapiai: `user-panel.html` (dalyvio skydelis), `organizer-events.html` (organizatoriaus skydelis), `admin.html` (administratoriaus skydelis).
