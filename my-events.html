@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mano Renginiai - CityEvents</title>
+    <style>
+        :root {
+            --primary: 220 90% 56%;
+            --primary-hover: 220 90% 48%;
+            --background: 240 10% 3.9%;
+            --foreground: 0 0% 98%;
+            --card: 240 10% 7%;
+            --card-foreground: 0 0% 98%;
+            --muted: 240 3.7% 15.9%;
+            --muted-foreground: 240 5% 64.9%;
+            --border: 240 3.7% 15.9%;
+            --accent: 280 90% 60%;
+            --success: 142 76% 36%;
+            --warning: 38 92% 50%;
+            --radius: 0.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(220 20% 10%) 100%);
+            color: hsl(var(--foreground));
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff6b35;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .nav a:hover {
+            color: #ff6b35;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: hsl(var(--foreground));
+            border: 1px solid hsl(var(--border));
+        }
+
+        .btn-outline:hover {
+            background: hsl(var(--muted));
+        }
+
+        .btn-primary {
+            background: hsl(var(--primary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: hsl(var(--primary-hover));
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: hsl(var(--muted-foreground));
+            font-size: 1.1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: hsl(var(--muted-foreground));
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab:hover {
+            color: hsl(var(--foreground));
+        }
+
+        .tab.active {
+            color: hsl(var(--primary));
+            border-bottom-color: hsl(var(--primary));
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) * 1.5);
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border-color: hsl(var(--primary) / 0.5);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .event-body {
+            padding: 1.5rem;
+        }
+
+        .event-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: hsl(var(--primary) / 0.1);
+            color: hsl(var(--primary));
+            border-radius: calc(var(--radius) * 0.5);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--foreground));
+        }
+
+        .event-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            color: hsl(var(--muted-foreground));
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .event-info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: calc(var(--radius) * 0.5);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: hsl(var(--success) / 0.1);
+            color: hsl(var(--success));
+        }
+
+        .badge-warning {
+            background: hsl(var(--warning) / 0.1);
+            color: hsl(var(--warning));
+        }
+
+        .rating {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .star {
+            color: hsl(var(--warning));
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--foreground));
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 1rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: hsl(var(--muted));
+        }
+
+        .calendar-day.has-event {
+            border-color: hsl(var(--primary));
+            background: hsl(var(--primary) / 0.1);
+        }
+
+        .calendar-day.has-event::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            width: 6px;
+            height: 6px;
+            background: hsl(var(--primary));
+            border-radius: 50%;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .header-content {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .event-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">CityEvents</a>
+            <nav class="nav">
+                <a href="index.html#events">Browse Events</a>
+                <a href="index.html#mapCard">Map</a>
+                <a href="organizer-events.html">For Organizers</a>
+                <a href="admin.html" data-nav-admin style="display: none;">Admin</a>
+            </nav>
+            <div class="header-actions" id="authActions"></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Mano Renginiai</h1>
+            <p>Valdykite savo pamėgtus ir aplankytus renginius</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('liked')">❤️ Pamėgti renginiai</button>
+            <button class="tab" onclick="switchTab('history')">📜 Renginių istorija</button>
+            <button class="tab" onclick="switchTab('calendar')">📅 Kalendorius</button>
+        </div>
+
+        <div id="liked" class="tab-content active">
+            <div class="event-grid" id="likedEventsGrid"></div>
+        </div>
+
+        <div id="history" class="tab-content">
+            <div class="event-grid" id="historyEventsGrid"></div>
+        </div>
+
+        <div id="calendar" class="tab-content">
+            <div class="calendar-view">
+                <h3 style="margin-bottom: 1rem; color: hsl(var(--foreground));">Gruodis 2024</h3>
+                <div class="calendar-grid">
+                    <div class="calendar-header">Pr</div>
+                    <div class="calendar-header">An</div>
+                    <div class="calendar-header">Tr</div>
+                    <div class="calendar-header">Kt</div>
+                    <div class="calendar-header">Pn</div>
+                    <div class="calendar-header">Št</div>
+                    <div class="calendar-header">Sk</div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+    <script>
+        // Mock data
+        const mockEvents = [
+            {
+                id: 1,
+                title: "Vasaros muzikos festivalis",
+                category: "Muzika",
+                image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400",
+                date: "2024-12-15",
+                location: "Vilnius, Lukiškių aikštė",
+                price: "25",
+                status: "attended",
+                rating: 5
+            },
+            {
+                id: 2,
+                title: "Technologijų konferencija 2024",
+                category: "Technologijos",
+                image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400",
+                date: "2024-12-20",
+                location: "Kaunas, Forum Palace",
+                price: "0",
+                status: "upcoming"
+            },
+            {
+                id: 3,
+                title: "Kalėdinis mugė",
+                category: "Pramogos",
+                image: "https://images.unsplash.com/photo-1482223250324-e0c08a3e0f1f?w=400",
+                date: "2024-12-24",
+                location: "Vilnius, Rotušės aikštė",
+                price: "0",
+                status: "upcoming"
+            }
+        ];
+
+        function renderEventCard(event) {
+            const statusBadge = event.status === 'attended'
+                ? '<span class="badge badge-success">Dalyvauta</span>'
+                : '<span class="badge badge-warning">Planuojama</span>';
+
+            const rating = event.rating
+                ? `<div class="rating">${'★'.repeat(event.rating)}${'☆'.repeat(5 - event.rating)}</div>`
+                : '';
+
+            return `
+                <div class="event-card">
+                    <img src="${event.image}" alt="${event.title}" class="event-image">
+                    <div class="event-body">
+                        <span class="event-category">${event.category}</span>
+                        ${statusBadge}
+                        <h3 class="event-title">${event.title}</h3>
+                        <div class="event-info">
+                            <div class="event-info-item">📅 ${event.date}</div>
+                            <div class="event-info-item">📍 ${event.location}</div>
+                            <div class="event-info-item">💶 ${event.price === "0" ? "Nemokamas" : event.price + " €"}</div>
+                        </div>
+                        ${rating}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEmptyState(icon, title, message) {
+            return `
+                <div class="empty-state">
+                    <div class="empty-state-icon">${icon}</div>
+                    <h3>${title}</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        function loadLikedEvents() {
+            const grid = document.getElementById('likedEventsGrid');
+            const likedEvents = mockEvents.filter(e => e.status === 'upcoming');
+
+            if (likedEvents.length === 0) {
+                grid.innerHTML = renderEmptyState('💔', 'Nėra pamėgtų renginių', 'Pradėkite pamėgti renginius, kad pamatytumėte juos čia');
+            } else {
+                grid.innerHTML = likedEvents.map(renderEventCard).join('');
+            }
+        }
+
+        function loadHistoryEvents() {
+            const grid = document.getElementById('historyEventsGrid');
+            const historyEvents = mockEvents.filter(e => e.status === 'attended');
+
+            if (historyEvents.length === 0) {
+                grid.innerHTML = renderEmptyState('📜', 'Nėra aplankytų renginių', 'Jūsų aplankyti renginiai bus rodomi čia');
+            } else {
+                grid.innerHTML = historyEvents.map(renderEventCard).join('');
+            }
+        }
+
+        function loadCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const eventDates = mockEvents.map(e => new Date(e.date).getDate());
+
+            let html = '';
+            for (let i = 1; i <= 31; i++) {
+                const hasEvent = eventDates.includes(i);
+                html += `<div class="calendar-day ${hasEvent ? 'has-event' : ''}">${i}</div>`;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = '/';
+        }
+
+        loadLikedEvents();
+        loadHistoryEvents();
+        loadCalendar();
+    </script>
+</body>
+</html>

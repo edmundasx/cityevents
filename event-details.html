@@ -5,63 +5,128 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Renginio informacija - CityEvents">
     <title>Renginio Informacija - CityEvents</title>
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/event.css">
 </head>
 <body data-page="details">
-<header class="header">
-    <div class="header-content">
-        <a href="index.html" class="logo">CityEvents</a>
-        <a href="index.html" class="back-link">← Grįžti į pagrindinį</a>
-    </div>
-</header>
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">CityEvents</a>
+            <nav class="nav">
+                <a href="index.html#events">Browse Events</a>
+                <a href="index.html#mapCard">Map</a>
+                <a href="organizer-events.html">For Organizers</a>
+                <a href="admin.html" data-nav-admin style="display: none;">Admin</a>
+            </nav>
+            <div class="header-actions" id="authActions"></div>
+        </div>
+    </header>
 
-<div class="container" id="eventContainer">
-    <img id="eventHero" src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=450&fit=crop" alt="Renginys" class="event-hero">
+    <div class="page-shell" id="eventContainer">
+        <div class="breadcrumbs">Pagrindinis / Renginiai / <span id="crumbTitle">Renginys</span></div>
 
-    <div class="event-header">
-        <span class="event-category" id="eventCategory">Renginys</span>
-        <h1 class="event-title" id="eventTitle">Renginio pavadinimas</h1>
-    </div>
+        <!-- Event Hero Image -->
+        <img id="eventHero" src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=1200&h=600&fit=crop"
+             alt="Vasaros Muzikos Festivalis"
+             class="event-hero">
 
-    <div class="event-content">
-        <div class="event-details">
-            <div class="detail-section">
-                <h2>Apie renginį</h2>
-                <p id="eventDescription">Kraunama renginio informacija...</p>
+        <!-- Event Content -->
+        <div class="event-content">
+            <!-- Main Content -->
+            <div class="event-main">
+                <!-- Event Header -->
+                <div class="event-header">
+                    <span class="event-category" id="eventCategory">🎵 Muzika</span>
+                    <h1 class="event-title" id="eventTitle">Vasaros Muzikos Festivalis</h1>
+                </div>
+
+                <!-- Event Description -->
+                <div class="event-section">
+                    <h2>Apie renginį</h2>
+                    <p id="eventDescription">
+                        Prisijunkite prie mūsų metinio vasaros muzikos festivalio, kuriame pasirodys geriausi
+                        vietiniai ir tarptautiniai atlikėjai. Mėgaukitės nuostabiais pasirodymais gražioje lauko
+                        aplinkoje su draugais ir šeima.
+                    </p>
+                    <br>
+                    <p>
+                        Festivalyje bus įvairių muzikos žanrų – nuo roko iki elektroninės muzikos. Taip pat veiks
+                        maisto mugė su geriausiais vietiniais kulinariniais patiekalais ir gėrimais.
+                    </p>
+                </div>
+
+                <!-- Event Details -->
+                <div class="event-section">
+                    <h2>Renginio informacija</h2>
+                    <div class="event-info-grid">
+                        <div class="event-info-item">
+                            <svg class="event-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <div>
+                                <strong>Data:</strong> <span id="eventDate">2024 m. liepos 15 d.</span>
+                            </div>
+                        </div>
+                        <div class="event-info-item">
+                            <svg class="event-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <div>
+                                <strong>Laikas:</strong> <span id="eventTime">18:00</span>
+                            </div>
+                        </div>
+                        <div class="event-info-item">
+                            <svg class="event-info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <div>
+                                <strong>Vieta:</strong> <span id="eventLocation">Centrinis miesto parkas, Vilnius</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Features -->
+                <div class="event-section">
+                    <h2>Kas jūsų laukia</h2>
+                    <ul class="event-features" id="eventFeatures">
+                        <li>Atviri koncertai po atviru dangumi su šiuolaikinio roko, pop ir elektronikos atlikėjais.</li>
+                        <li>Gurmaniška maisto ir gėrimų mugė, pristatanti vietinius skonius.</li>
+                        <li>Šeimos zona su kūrybinėmis dirbtuvėmis ir pramogomis vaikams.</li>
+                        <li>Interaktyvios šviesų ir meno instaliacijos vakarėjant.</li>
+                    </ul>
+                </div>
+
+                <!-- Organizer Info -->
+                <div class="event-section">
+                    <h2>Organizatorius</h2>
+                    <div class="organizer-section">
+                        <div class="organizer-avatar" id="organizerAvatar">EV</div>
+                        <div class="organizer-info">
+                            <h3 id="eventOrganizer">Vilniaus Muzika</h3>
+                            <p id="eventStatus">Renginių organizatorius</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="detail-section">
-                <h2>Renginio informacija</h2>
-                <div class="info-item" id="eventDate">Data: —</div>
-                <div class="info-item" id="eventTime">Laikas: —</div>
-                <div class="info-item" id="eventLocation">Vieta: —</div>
-            </div>
-
-            <div class="detail-section">
-                <h2>Kas jūsų laukia</h2>
-                <ul class="event-features" id="eventFeatures">
-                    <li>Įkeliama...</li>
-                </ul>
+            <!-- Sidebar -->
+            <div class="event-sidebar">
+                <div class="ticket-card">
+                    <div class="price" id="eventPrice">25.00 €</div>
+                    <button class="btn btn-primary btn-full" id="btnAttend">Gauti bilietus</button>
+                    <button class="btn btn-outline btn-full" id="btnFavorite">Pridėti į mėgstamus</button>
+                    <p class="ticket-note">
+                        Galimi bilietai
+                    </p>
+                </div>
             </div>
         </div>
-
-        <div class="event-sidebar">
-            <div class="price-card">
-                <div class="price" id="eventPrice">0 €</div>
-                <button class="btn btn-primary" id="btnAttend">Pažymėti, kad dalyvausite</button>
-                <button class="btn btn-secondary" id="btnFavorite">Pridėti į mėgstamus</button>
-            </div>
-
-            <div class="organizer-card">
-                <div class="organizer-title">Organizatorius</div>
-                <div class="organizer-name" id="eventOrganizer">—</div>
-                <div class="organizer-title" style="margin-top: 1rem;">Būsena</div>
-                <div class="organizer-name" id="eventStatus">—</div>
-            </div>
-        </div>
     </div>
-</div>
 
-<script src="assets/js/app.js"></script>
+    <script src="assets/js/api.js"></script>
+    <script src="assets/js/app.js"></script>
 </body>
 </html>

@@ -7,17 +7,18 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body data-page="organizer-events">
-<header class="header">
-    <div class="header-content">
-        <a href="index.html" class="logo">City Events</a>
-        <nav class="nav">
-            <a href="index.html#create">Sukurti renginį</a>
-            <a href="organizer-profile.html">Organizatoriaus profilis</a>
-            <a href="edit-profile.html">Dalyvio profilis</a>
-        </nav>
-        <a class="btn btn-outline js-login-trigger" href="#login">Prisijungti</a>
-    </div>
-</header>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">CityEvents</a>
+            <nav class="nav">
+                <a href="index.html#events">Browse Events</a>
+                <a href="index.html#mapCard">Map</a>
+                <a href="organizer-events.html">For Organizers</a>
+                <a href="admin.html" data-nav-admin style="display: none;">Admin</a>
+            </nav>
+            <div class="header-actions" id="authActions"></div>
+        </div>
+    </header>
 
 <main class="page">
     <section class="page-header">
@@ -30,6 +31,34 @@
     </section>
 
     <section class="card wide">
+        <div class="summary-grid" aria-label="Greita statistika">
+            <div class="summary-card">
+                <p class="muted">Laukia patvirtinimo</p>
+                <strong id="summaryPendingCount">0</strong>
+                <span class="pill">Peržiūrėkite paraiškas</span>
+            </div>
+            <div class="summary-card">
+                <p class="muted">Patvirtinti renginiai</p>
+                <strong id="summaryApprovedCount">0</strong>
+                <span class="pill neutral">Matomi lankytojams</span>
+            </div>
+            <div class="summary-card">
+                <p class="muted">Artėjantys renginiai</p>
+                <strong id="summaryUpcomingCount">0</strong>
+                <span class="pill success">Pasiruošimas vyksta</span>
+            </div>
+            <div class="summary-card">
+                <p class="muted">Atmesti arba atnaujinimo</p>
+                <strong id="summaryRejectedCount">0</strong>
+                <span class="pill danger">Peržiūrėkite priežastis</span>
+            </div>
+            <div class="summary-card">
+                <p class="muted">Nauji pranešimai</p>
+                <strong id="summaryNotificationsCount">0</strong>
+                <span class="pill info">Statuso naujienos</span>
+            </div>
+        </div>
+
         <div class="list-toolbar">
             <div>
                 <strong>Filtras:</strong>
@@ -38,10 +67,23 @@
                 <button class="chip" data-filter="approved">Patvirtinti</button>
                 <button class="chip" data-filter="rejected">Atmesti</button>
             </div>
+            <div class="toolbar-actions">
+                <label for="organizerSort">Rūšiuoti:</label>
+                <select id="organizerSort">
+                    <option value="asc">Pagal datą (artimiausi)</option>
+                    <option value="desc">Pagal datą (tolimiausi)</option>
+                </select>
+            </div>
             <span class="muted" id="organizerEventsCount"></span>
         </div>
 
-        <div class="list-columns">
+        <div class="list-columns three">
+            <div>
+                <h3>Laukia patvirtinimo</h3>
+                <div id="pendingList" class="vertical-list compact">
+                    <div class="loading">Įkeliami duomenys...</div>
+                </div>
+            </div>
             <div>
                 <h3>Artėjantys renginiai</h3>
                 <div id="upcomingEvents" class="vertical-list compact">
@@ -55,9 +97,55 @@
                 </div>
             </div>
         </div>
+
+        <div class="card" style="margin-top:1.5rem;">
+            <div class="card-header">
+                <h3>Pranešimai</h3>
+                <p class="muted">Patvirtinimai ir komentarai iš administratorių.</p>
+            </div>
+            <div id="organizerNotifications" class="vertical-list"></div>
+        </div>
+
+        <div class="card" style="margin-top:1.5rem;">
+            <div class="card-header">
+                <h3>Statuso eiga</h3>
+                <p class="muted">Sekite, kurie renginiai laukia, yra patvirtinti ar atmesti.</p>
+            </div>
+            <div id="organizerTimeline" class="timeline"></div>
+        </div>
+
+        <div class="card" style="margin-top:1.5rem;">
+            <div class="card-header">
+                <h3>Redaguoti paskelbtą renginį</h3>
+                <p class="muted">Atnaujinkite aprašymą, datą ar viršelį. Patvirtinti renginiai gali gauti statusą „Atnaujinimas laukia“.</p>
+            </div>
+            <form id="editEventForm" class="form-grid">
+                <div class="form-group">
+                    <label for="editEventSelect">Renginys</label>
+                    <select id="editEventSelect" name="event_id" required>
+                        <option value="">Pasirinkite</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editEventDescription">Naujas aprašymas</label>
+                    <textarea id="editEventDescription" name="description" rows="3" placeholder="Palikite tuščią, jei nekeičiate"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editEventDate">Nauja data</label>
+                    <input type="datetime-local" id="editEventDate" name="event_date" placeholder="Pasirinkite datą">
+                </div>
+                <div class="form-group">
+                    <label for="editEventImage">Viršelio nuoroda</label>
+                    <input type="url" id="editEventImage" name="cover_image" placeholder="https://...">
+                </div>
+                <button class="btn btn-primary" type="submit">Išsaugoti pakeitimus</button>
+                <div class="form-message" id="editEventMessage"></div>
+            </form>
+        </div>
     </section>
 </main>
 
+<script src="assets/js/api.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

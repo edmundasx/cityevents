@@ -61,11 +61,20 @@ CREATE TABLE IF NOT EXISTS notifications (
 );
 
 INSERT INTO users (name, email, password_hash, role) VALUES
-('Demo Administrator', 'admin@cityevents.test', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
-('Demo Organizatorius', 'organizer@cityevents.test', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'organizer');
+('Admin', 'admin@cityevents.test', '$2y$12$S6lvxmeBSi4694DATPkgzOmDKJ8CxwqRmYbwEbN0Z8QGh0p23aQXC', 'admin'),
+('Organizer', 'organizer@cityevents.test', '$2y$12$H1xGsEUtQwBcj2YS49UH4.1pvw0MuVTO1/u0AQvTmMkm5rwuuLTei', 'organizer'),
+('User', 'user@cityevents.test', '$2y$12$uIqRJIpbHyOv6/v2PKguzuKLzJVeKbNQzbjDGxpZ5UFfxfw0.tRL6', 'user');
 
 INSERT INTO events (organizer_id, title, description, category, location, lat, lng, event_date, price, status, cover_image)
 VALUES
 (2, 'Miesto mugė', 'Sezoninė miesto mugė su vietiniais gamintojais ir scena', 'food', 'Rotušės aikštė', 54.6872, 25.2797, DATE_ADD(NOW(), INTERVAL 7 DAY), 0, 'approved', 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80'),
 (2, 'Technologijų vakaras', 'Diskusijos ir dirbtuvės apie inovacijas', 'business', 'Technopolis Vilnius', 54.6690, 25.2747, DATE_ADD(NOW(), INTERVAL 14 DAY), 15.00, 'pending', 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=800&q=80'),
-(2, 'Muzikos piknikas', 'Gyva muzika parke ir maisto furgonai', 'music', 'Bernardinų sodas', 54.6840, 25.2900, DATE_ADD(NOW(), INTERVAL 3 DAY), 5.00, 'approved', 'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=800&q=80');
+(2, 'Muzikos piknikas', 'Gyva muzika parke ir maisto furgonai', 'music', 'Bernardinų sodas', 54.6840, 25.2900, DATE_ADD(NOW(), INTERVAL 3 DAY), 5.00, 'approved', 'https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=800&q=80'),
+(2, 'Urban Run', '5 km miesto bėgimas palei upę su muzika finiše', 'sports', 'Neries pakrantė', 54.6890, 25.2660, DATE_ADD(NOW(), INTERVAL -10 DAY), 0, 'approved', 'https://images.unsplash.com/photo-1508609349937-5ec4ae374ebf?auto=format&fit=crop&w=900&q=80'),
+(2, 'Kino vakaras po atviru dangumi', 'Vasaros kino seansas su vietos režisieriumi', 'arts', 'Valdovų rūmų kiemas', 54.6850, 25.2890, DATE_ADD(NOW(), INTERVAL 21 DAY), 8.00, 'pending', 'https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=900&q=80'),
+(2, 'Startuolių pusryčiai', 'Tinklaveikos susitikimas ankstyvą rytą su kava ir investuotojais', 'business', 'Vilnius Tech Park', 54.6800, 25.2870, DATE_ADD(NOW(), INTERVAL 35 DAY), 12.00, 'approved', 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80');
+
+INSERT INTO notifications (user_id, event_id, type, message) VALUES
+(1, 2, 'admin', 'Laukia 2 renginiai patvirtinimo'),
+(2, 1, 'organizer', 'Jūsų renginys „Miesto mugė“ patvirtintas'),
+(3, 3, 'user', 'Panašūs renginiai į „Muzikos piknikas“ netoliese');

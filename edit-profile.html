@@ -3,70 +3,388 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redaguoti profilį - CityEvents</title>
+    <title>Redaguoti Profilį - CityEvents</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        :root {
+            --primary: 220 90% 56%;
+            --primary-hover: 220 90% 48%;
+            --background: 240 10% 3.9%;
+            --foreground: 0 0% 98%;
+            --card: 240 10% 7%;
+            --card-foreground: 0 0% 98%;
+            --muted: 240 3.7% 15.9%;
+            --muted-foreground: 240 5% 64.9%;
+            --border: 240 3.7% 15.9%;
+            --input: 240 3.7% 15.9%;
+            --radius: 0.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(220 20% 10%) 100%);
+            color: hsl(var(--foreground));
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff6b35;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .nav a:hover {
+            color: #ff6b35;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: hsl(var(--foreground));
+            border: 1px solid hsl(var(--border));
+        }
+
+        .btn-outline:hover {
+            background: hsl(var(--muted));
+        }
+
+        .btn-primary {
+            background: hsl(var(--primary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: hsl(var(--primary-hover));
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(280 90% 60%) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: hsl(var(--muted-foreground));
+            font-size: 1.1rem;
+        }
+
+        .profile-card {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: calc(var(--radius) * 2);
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .avatar-section {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid hsl(var(--border));
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(280 90% 60%) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .avatar-info {
+            flex: 1;
+        }
+
+        .avatar-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .user-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: hsl(var(--primary) / 0.1);
+            color: hsl(var(--primary));
+            border-radius: calc(var(--radius) * 0.5);
+            font-size: 0.85rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: hsl(var(--foreground));
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: hsl(var(--background));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            color: hsl(var(--foreground));
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            box-shadow: 0 0 0 3px hsla(var(--primary) / 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions button {
+            flex: 1;
+            padding: 0.75rem 2rem;
+        }
+
+        .form-message {
+            margin-top: 0.75rem;
+            font-weight: 600;
+        }
+
+        .success-toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: hsl(142 76% 36%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .success-toast.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .header-content {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .profile-card {
+                padding: 1.5rem;
+            }
+
+            .avatar-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .success-toast {
+                top: 1rem;
+                right: 1rem;
+                left: 1rem;
+            }
+        }
+    </style>
 </head>
 <body data-page="user-profile">
-<header class="header">
-    <div class="header-content">
-        <a href="index.html" class="logo">City Events</a>
-        <nav class="nav">
-            <a href="index.html#events">Renginiai</a>
-            <a href="index.html#map">Žemėlapis</a>
-            <a href="organizer-events.html">Mano renginiai</a>
-        </nav>
-        <a class="btn btn-outline js-login-trigger" href="#login">Prisijungti</a>
-    </div>
-</header>
-
-<main class="page">
-    <section class="page-header">
-        <div>
-            <p class="eyebrow">Paskyros nustatymai</p>
-            <h1>Atnaujinkite savo profilį</h1>
-            <p class="muted">Redaguokite kontaktus ir pomėgius, kad gautumėte tikslesnes rekomendacijas.</p>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">CityEvents</a>
+            <nav class="nav">
+                <a href="index.html#events">Browse Events</a>
+                <a href="index.html#mapCard">Map</a>
+                <a href="organizer-events.html">For Organizers</a>
+                <a href="admin.html" data-nav-admin style="display: none;">Admin</a>
+            </nav>
+            <div class="header-actions" id="authActions"></div>
         </div>
-        <a class="btn btn-outline" href="organizer-profile.html">Einate tapti organizatoriumi?</a>
-    </section>
+    </header>
 
-    <section class="card wide">
-        <form id="userProfileForm" class="form-grid">
+<div class="container">
+    <div class="page-header">
+        <h1>Redaguoti Profilį</h1>
+        <p>Atnaujinkite savo asmeninę informaciją</p>
+    </div>
+
+    <div class="profile-card">
+        <div class="avatar-section">
+            <div class="avatar" id="avatarDisplay">JV</div>
+            <div class="avatar-info">
+                <h2 id="displayName">CityEvents narys</h2>
+                <span class="user-type" id="userType">👤 Lankytojas</span>
+            </div>
+        </div>
+
+        <form id="userProfileForm">
             <div class="form-group">
-                <label for="userName">Vardas ir pavardė</label>
-                <input type="text" id="userName" name="name" required>
+                <label for="userName">👤 Vardas ir pavardė</label>
+                <input type="text" id="userName" name="name" required placeholder="Jonas Valančiūnas">
             </div>
+
             <div class="form-group">
-                <label for="userEmail">El. paštas</label>
-                <input type="email" id="userEmail" name="email" required>
+                <label for="userEmail">📧 El. paštas</label>
+                <input type="email" id="userEmail" name="email" required placeholder="jonas@example.com">
             </div>
-            <div class="form-group">
-                <label for="userCity">Miestas</label>
-                <input type="text" id="userCity" name="city" placeholder="Vilnius">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="userPhone">📱 Telefonas</label>
+                    <input type="tel" id="userPhone" name="phone" placeholder="+370 600 00000">
+                </div>
+
+                <div class="form-group">
+                    <label for="userCity">📍 Miestas</label>
+                    <input type="text" id="userCity" name="city" placeholder="Vilnius">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="userPhone">Telefonas</label>
-                <input type="tel" id="userPhone" name="phone" placeholder="+370...">
-            </div>
-            <div class="form-group">
-                <label for="userInterests">Pomėgiai (kableliais)</label>
-                <input type="text" id="userInterests" name="interests" placeholder="muzika, menas, technologijos">
-            </div>
-            <div class="form-group">
-                <label for="userPassword">Slaptažodis</label>
-                <input type="password" id="userPassword" name="password" placeholder="Palikite tuščią jei nekeičiate">
-            </div>
-            <div class="form-group full">
-                <label for="userBio">Trumpai apie jus</label>
-                <textarea id="userBio" name="bio" rows="3" placeholder="Kuo domitės? Kokius renginius lankote?"></textarea>
-            </div>
+
             <div class="form-actions">
-                <button class="btn btn-primary" type="submit">Išsaugoti profilį</button>
-                <div class="form-message" id="userProfileMessage"></div>
+                <button type="button" class="btn btn-outline" onclick="window.history.back()">Atšaukti</button>
+                <button type="submit" class="btn btn-primary">Išsaugoti pakeitimus</button>
             </div>
+            <div class="form-message" id="userProfileMessage" aria-live="polite"></div>
         </form>
-    </section>
-</main>
+    </div>
+</div>
 
+<div class="success-toast" id="successToast">
+    ✓ Profilis sėkmingai atnaujintas!
+</div>
+
+<script src="assets/js/api.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

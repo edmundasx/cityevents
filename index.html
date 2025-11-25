@@ -9,20 +9,18 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+z0ympK0tZbFdK4JeayQMZTcWd3vgXn8fLJXYM/to=" crossorigin="">
 </head>
 <body data-page="home">
-<header class="header">
-    <div class="header-content">
-        <a href="#" class="logo">City Events</a>
-        <nav class="nav">
-            <a href="#events">Naršyti renginius</a>
-            <a href="#create">Sukurti renginį</a>
-            <a href="#map">Žemėlapis</a>
-        </nav>
-        <div style="display: flex; gap: 0.5rem;">
-            <a class="btn btn-outline js-login-trigger" href="#login">Prisijungti</a>
-            <a class="btn btn-primary" href="signup.html">Registruotis</a>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">CityEvents</a>
+            <nav class="nav">
+                <a href="#events">Browse Events</a>
+                <a href="#mapCard">Map</a>
+                <a href="organizer-events.html">For Organizers</a>
+                <a href="admin.html" data-nav-admin style="display: none;">Admin</a>
+            </nav>
+            <div class="header-actions" id="authActions"></div>
         </div>
-    </div>
-</header>
+    </header>
 
 <section class="hero">
     <div class="hero-map">
@@ -173,6 +171,7 @@
 </section>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1j7kP5qL1aQW2Niqn1ytY1/6ae2q3X1gjp3pqt8M=" crossorigin=""></script>
+<script src="assets/js/api.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

@@ -30,6 +30,9 @@ switch ($resource) {
     case 'favorites':
         handleFavorites($database);
         break;
+    case 'auth':
+        handleAuth($database);
+        break;
     case 'admin':
         handleAdmin($database);
         break;
@@ -328,6 +331,30 @@ function handleUsers(mysqli $db): void
             'role' => $data['role'],
         ],
     ], 201);
+}
+
+function handleAuth(mysqli $db): void
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        Response::json(['error' => 'Metodas nepalaikomas'], 405);
+    }
+
+    $data = getJsonInput();
+    if (empty($data['email']) || empty($data['password'])) {
+        Response::json(['error' => 'Reikalingi prisijungimo duomenys'], 422);
+    }
+
+    $stmt = $db->prepare("SELECT id, name, email, role, password_hash FROM users WHERE email = ? LIMIT 1");
+    $stmt->bind_param('s', $data['email']);
+    $stmt->execute();
+    $user = $stmt->get_result()->fetch_assoc();
+
+    if (!$user || !password_verify($data['password'], $user['password_hash'])) {
+        Response::json(['error' => 'Neteisingi prisijungimo duomenys'], 401);
+    }
+
+    unset($user['password_hash']);
+    Response::json(['message' => 'Prisijungimas sėkmingas', 'user' => $user]);
 }
 
 function handleFavorites(mysqli $db): void

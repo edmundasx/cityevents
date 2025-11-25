@@ -7,17 +7,18 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body data-page="organizer-profile">
-<header class="header">
-    <div class="header-content">
-        <a href="index.html" class="logo">City Events</a>
-        <nav class="nav">
-            <a href="index.html#events">Renginiai</a>
-            <a href="organizer-events.html">Mano renginiai</a>
-            <a href="edit-profile.html">Profilis</a>
-        </nav>
-        <a class="btn btn-outline js-login-trigger" href="#login">Prisijungti</a>
-    </div>
-</header>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">CityEvents</a>
+            <nav class="nav">
+                <a href="index.html#events">Browse Events</a>
+                <a href="index.html#mapCard">Map</a>
+                <a href="organizer-events.html">For Organizers</a>
+                <a href="admin.html" data-nav-admin style="display: none;">Admin</a>
+            </nav>
+            <div class="header-actions" id="authActions"></div>
+        </div>
+    </header>
 
 <main class="page">
     <section class="page-header">
@@ -71,6 +72,7 @@
     </section>
 </main>
 
+<script src="assets/js/api.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>

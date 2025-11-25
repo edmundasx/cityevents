@@ -5,9 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CityEvents - Administratorius</title>
     <meta name="description" content="Peržiūrėkite ir valdydkite renginių paraiškas.">
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body data-page="admin">
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">CityEvents</a>
+            <nav class="nav">
+                <a href="index.html#events">Browse Events</a>
+                <a href="index.html#mapCard">Map</a>
+                <a href="organizer-events.html">For Organizers</a>
+                <a href="admin.html" data-nav-admin style="display: none;">Admin</a>
+            </nav>
+            <div class="header-actions" id="authActions"></div>
+        </div>
+    </header>
+
     <header class="admin-header">
         <h1>Administratoriaus skydelis</h1>
         <p>Patvirtinkite ar atminkite pateiktus renginius, blokuokite pažeidėjus.</p>
@@ -29,6 +43,62 @@
                 <div class="stat-icon">🚫</div>
                 <div class="stat-value" id="statRejected">0</div>
                 <div class="stat-label">Atmesta / užblokuota</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel Section -->
+    <section class="admin-section" id="admin">
+        <div class="admin-header">
+            <h1>🎯 Admin Dashboard</h1>
+            <p>Manage events, users, and view analytics</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="totalEvents">0</div>
+                <div class="stat-label">Total Events</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-value" id="pendingEvents">0</div>
+                <div class="stat-label">Pending Approval</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="approvedEvents">0</div>
+                <div class="stat-label">Approved Events</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" id="totalUsers">247</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+        </div>
+
+        <!-- Main Admin Content -->
+        <div class="admin-content">
+            <!-- Pending Events for Approval -->
+            <div class="pending-events">
+                <h2>Pending Events</h2>
+                <div id="pendingEventsList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Calendar -->
+            <div class="calendar-container">
+                <h2>Event Calendar</h2>
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button onclick="changeMonth(-1)">←</button>
+                        <button onclick="changeMonth(1)">→</button>
+                    </div>
+                    <div class="calendar-month" id="calendarMonth"></div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
             </div>
         </div>
     </section>
@@ -55,8 +125,79 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Laukia patvirtinimo</h3>
+                    <p class="muted">Skubiausi įrašai iš organizatorių.</p>
+                </div>
+                <div id="pendingList" class="vertical-list"></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Įvykę renginiai</h3>
+                    <p class="muted">Greita apžvalga statistikai.</p>
+                </div>
+                <div id="pastAdminEvents" class="vertical-list"></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Kalendorius</h3>
+                    <p class="muted">Artimiausių renginių sąrašas.</p>
+                </div>
+                <div id="adminCalendar" class="calendar"></div>
+                <div class="calendar-legend">
+                    <span class="dot upcoming"></span>Artėjantys
+                    <span class="dot pending"></span>Laukia patvirtinimo
+                    <span class="dot past"></span>Įvykę
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Administratoriaus profilis</h3>
+                    <p class="muted">Atnaujinkite savo kontaktus.</p>
+                </div>
+                <form class="profile-form" id="adminProfileForm">
+                    <input type="text" name="name" placeholder="Vardas" value="Admin">
+                    <input type="email" name="email" placeholder="El. paštas" value="admin@cityevents.test">
+                    <input type="tel" name="phone" placeholder="Telefonas" value="+37060000000">
+                    <button type="submit" class="btn approve">Atnaujinti</button>
+                    <p class="form-note" id="adminProfileMessage">Informacija atnaujinta.</p>
+                </form>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Pranešimai</h3>
+                    <p class="muted">Greitos sistemos žinutės.</p>
+                </div>
+                <div id="adminNotifications" class="vertical-list"></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Veiklos apžvalga</h3>
+                    <p class="muted">Reali statistika pagal dabartinius renginius.</p>
+                </div>
+                <div class="insights" id="adminInsights">
+                    <div class="insight" id="insightUpcoming">
+                        <p class="muted">Artėjantys renginiai</p>
+                        <strong>0</strong>
+                    </div>
+                    <div class="insight" id="insightRevenue">
+                        <p class="muted">Numanomos pajamos</p>
+                        <strong>0 €</strong>
+                    </div>
+                    <div class="insight" id="insightEngagement">
+                        <p class="muted">Dalyvių susidomėjimas</p>
+                        <strong>0 rezervacijų</strong>
+                    </div>
+                </div>
+                <div class="trend-bars" id="adminTrendBars"></div>
+            </div>
+        </div>
     </main>
 
+    <script src="assets/js/api.js"></script>
     <script src="assets/js/app.js"></script>
 </body>
 </html>

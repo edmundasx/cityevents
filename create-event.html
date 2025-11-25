@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityEvents - Discover Events for Everything You Love</title>
+    <meta name="description" content="Find and attend events, browse organizers, or create your own events. Discover music, arts, business, food, and more.">
+    
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY_HERE&callback=initMap" async defer></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        /* Header Styles */
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff6b35;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav a {
+            color: #333;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .nav a:hover {
+            color: #ff6b35;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #e85a2a;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #333;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-outline:hover {
+            border-color: #ff6b35;
+            color: #ff6b35;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #ff6b35 0%, #f73378 100%);
+            color: white;
+            padding: 5rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            filter: blur(60px);
+        }
+
+        .hero::before {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .hero::after {
+            width: 250px;
+            height: 250px;
+            bottom: -80px;
+            left: -80px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        /* Search Box */
+        .search-box {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            display: flex;
+            gap: 0.75rem;
+            max-width: 700px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+        }
+
+        /* Categories */
+        .categories {
+            background: white;
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .categories-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .category:hover {
+            background: #f8f9fa;
+        }
+
+        .category-icon {
+            font-size: 1.5rem;
+        }
+
+        .category-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Events Section */
+        .events-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .section-header p {
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        /* Event Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Map Section */
+        .map-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            height: 600px;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-marker-content {
+            padding: 0.5rem;
+        }
+
+        .map-marker-title {
+            font-weight: 600;
+            color: #ff6b35;
+            margin-bottom: 0.25rem;
+        }
+
+        .map-marker-details {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .map-marker-price {
+            font-weight: 600;
+            color: #10b981;
+            margin-top: 0.25rem;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #e5e7eb;
+        }
+
+        .event-content {
+            padding: 1.25rem;
+        }
+
+        .event-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .event-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-price {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: white;
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: #ff6b35;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .event-card-wrapper {
+            position: relative;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        /* Registration Form */
+        .registration-section {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .form-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        select.form-input {
+            cursor: pointer;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .radio-option input[type="radio"]:checked + .radio-label {
+            background: #fff5f2;
+            border-color: #ff6b35;
+            color: #ff6b35;
+        }
+
+        .radio-label:hover {
+            border-color: #ff6b35;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ff6b35 0%, #f73378 100%);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Admin Panel Styles */
+        .admin-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .admin-header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-header p {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .admin-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .pending-events {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .pending-events h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .pending-event-item {
+            padding: 1.25rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .pending-event-item:hover {
+            border-color: #ff6b35;
+            background: #fff5f2;
+        }
+
+        .pending-event-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .pending-event-details {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+        }
+
+        .pending-event-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-approve {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-approve:hover {
+            background: #059669;
+        }
+
+        .btn-reject {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-reject:hover {
+            background: #dc2626;
+        }
+
+        .calendar-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .calendar-container h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .calendar-nav button {
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calendar-nav button:hover {
+            background: #e5e7eb;
+        }
+
+        .calendar-month {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 0.875rem;
+            padding: 0.5rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .calendar-day:hover {
+            background: #f8f9fa;
+        }
+
+        .calendar-day.has-event {
+            background: #fff5f2;
+            font-weight: 600;
+            color: #ff6b35;
+        }
+
+        .calendar-day.today {
+            background: #ff6b35;
+            color: white;
+            font-weight: 600;
+        }
+
+        .calendar-day.other-month {
+            color: #d1d5db;
+        }
+
+        .event-indicator {
+            position: absolute;
+            bottom: 2px;
+            width: 4px;
+            height: 4px;
+            background: #ff6b35;
+            border-radius: 50%;
+        }
+
+        @media (max-width: 1024px) {
+            .admin-content {
+                grid-template-columns: 1fr;
+            .header-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+
+            .pending-events, .calendar-container {
+                padding: 1.5rem;
+            }
+
+            .calendar-grid {
+                gap: 0.25rem;
+            }
+
+            .calendar-day {
+                font-size: 0.875rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">CityEvents</a>
+            <nav class="nav">
+                <a href="index.html#events">Browse Events</a>
+                <a href="index.html#mapCard">Map</a>
+                <a href="organizer-events.html">For Organizers</a>
+                <a href="admin.html" data-nav-admin style="display: none;">Admin</a>
+            </nav>
+            <div class="header-actions" id="authActions"></div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Discover events for all the things you love</h1>
+            <p>Find and attend events, browse and contact organizers, or create your own events</p>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search for events" id="searchInput">
+                <input type="text" class="search-input" placeholder="Location" id="locationInput">
+                <button class="btn btn-primary" onclick="searchEvents()">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="categories-content">
+            <div class="category" onclick="filterByCategory('music')">
+                <span class="category-icon">🎵</span>
+                <span class="category-label">Music</span>
+            </div>
+            <div class="category" onclick="filterByCategory('arts')">
+                <span class="category-icon">🎨</span>
+                <span class="category-label">Arts</span>
+            </div>
+            <div class="category" onclick="filterByCategory('charity')">
+                <span class="category-icon">❤️</span>
+                <span class="category-label">Charity</span>
+            </div>
+            <div class="category" onclick="filterByCategory('business')">
+                <span class="category-icon">💼</span>
+                <span class="category-label">Business</span>
+            </div>
+            <div class="category" onclick="filterByCategory('education')">
+                <span class="category-icon">📚</span>
+                <span class="category-label">Education</span>
+            </div>
+            <div class="category" onclick="filterByCategory('food')">
+                <span class="category-icon">🍽️</span>
+                <span class="category-label">Food & Drink</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="events-section" id="events">
+        <div class="section-header">
+            <div>
+                <h2>Events in your area</h2>
+                <p>Discover amazing experiences happening near you</p>
+            </div>
+            <button class="btn btn-outline">See All</button>
+        </div>
+        
+        <div class="events-grid" id="eventsGrid">
+            <div class="loading">Loading events...</div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section" id="map-section">
+        <div class="section-header">
+            <div>
+                <h2>Renginių žemėlapis</h2>
+                <p>Raskite renginius žemėlapyje pagal vietą</p>
+            </div>
+        </div>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </section>
+
+    <!-- Event Creation Form Section -->
+    <section class="registration-section" id="create-event">
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Create Your Event</h2>
+                <p>Fill in the details to list your event on CityEvents</p>
+            </div>
+
+            <form id="eventCreationForm" onsubmit="handleEventCreation(event)">
+                <!-- Event Name -->
+                <div class="form-group">
+                    <label class="form-label" for="eventName">Event Name *</label>
+                    <input 
+                        type="text" 
+                        id="eventName" 
+                        name="eventName" 
+                        class="form-input" 
+                        placeholder="Enter your event name"
+                        required
+                    >
+                </div>
+
+                <!-- Event Category -->
+                <div class="form-group">
+                    <label class="form-label" for="eventCategory">Event Category *</label>
+                    <select 
+                        id="eventCategory" 
+                        name="eventCategory" 
+                        class="form-input"
+                        required
+                    >
+                        <option value="">Select a category</option>
+                        <option value="music">🎵 Music</option>
+                        <option value="arts">🎨 Arts</option>
+                        <option value="charity">❤️ Charity</option>
+                        <option value="business">💼 Business</option>
+                        <option value="education">📚 Education</option>
+                        <option value="food">🍽️ Food & Drink</option>
+                    </select>
+                </div>
+
+                <!-- Event Date -->
+                <div class="form-group">
+                    <label class="form-label" for="eventDate">Event Date *</label>
+                    <input 
+                        type="date" 
+                        id="eventDate" 
+                        name="eventDate" 
+                        class="form-input" 
+                        required
+                    >
+                </div>
+
+                <!-- Event Time -->
+                <div class="form-group">
+                    <label class="form-label" for="eventTime">Event Time *</label>
+                    <input 
+                        type="time" 
+                        id="eventTime" 
+                        name="eventTime" 
+                        class="form-input" 
+                        required
+                    >
+                </div>
+
+                <!-- Event Location -->
+                <div class="form-group">
+                    <label class="form-label" for="eventLocation">Event Location *</label>
+                    <input 
+                        type="text" 
+                        id="eventLocation" 
+                        name="eventLocation" 
+                        class="form-input" 
+                        placeholder="e.g., Central Park, New York"
+                        required
+                    >
+                </div>
+
+                <!-- Event Price -->
+                <div class="form-group">
+                    <label class="form-label" for="eventPrice">Ticket Price *</label>
+                    <input 
+                        type="text" 
+                        id="eventPrice" 
+                        name="eventPrice" 
+                        class="form-input" 
+                        placeholder="e.g., $25 or Free"
+                        required
+                    >
+                </div>
+
+                <!-- Event Description -->
+                <div class="form-group">
+                    <label class="form-label" for="eventDescription">Event Description *</label>
+                    <textarea 
+                        id="eventDescription" 
+                        name="eventDescription" 
+                        class="form-input" 
+                        placeholder="Describe your event in detail..."
+                        rows="4"
+                        required
+                    ></textarea>
+                </div>
+
+                <!-- Event Image URL -->
+                <div class="form-group">
+                    <label class="form-label" for="eventImage">Event Image URL</label>
+                    <input 
+                        type="url" 
+                        id="eventImage" 
+                        name="eventImage" 
+                        class="form-input" 
+                        placeholder="https://example.com/image.jpg"
+                    >
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">
+                    Create Event
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Admin Panel Section -->
+    <section class="admin-section" id="admin" style="display: none;">
+        <div class="admin-header">
+            <h1>🎯 Admin Dashboard</h1>
+            <p>Manage events, users, and view analytics</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="totalEvents">0</div>
+                <div class="stat-label">Total Events</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-value" id="pendingEvents">0</div>
+                <div class="stat-label">Pending Approval</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="approvedEvents">0</div>
+                <div class="stat-label">Approved Events</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" id="totalUsers">247</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+        </div>
+
+        <!-- Main Admin Content -->
+        <div class="admin-content">
+            <!-- Pending Events for Approval -->
+            <div class="pending-events">
+                <h2>Pending Events</h2>
+                <div id="pendingEventsList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Calendar -->
+            <div class="calendar-container">
+                <h2>Event Calendar</h2>
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button onclick="changeMonth(-1)">←</button>
+                        <button onclick="changeMonth(1)">→</button>
+                    </div>
+                    <div class="calendar-month" id="calendarMonth"></div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/js/app.js"></script>
+    <script>
+        // Sample event data
+        const events = [
+            {
+                id: 1,
+                title: "Summer Music Festival 2025",
+                date: "Sat, Jun 15",
+                time: "2:00 PM",
+                location: "Central Park, New York",
+                price: "$45",
+                category: "music",
+                image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&q=80",
+                lat: 54.6872,
+                lng: 25.2797
+            },
+            {
+                id: 2,
+                title: "Tech Conference: AI & Future",
+                date: "Mon, Jul 8",
+                time: "9:00 AM",
+                location: "Convention Center, San Francisco",
+                price: "$299",
+                category: "business",
+                image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&q=80",
+                lat: 54.6920,
+                lng: 25.2668
+            },
+            {
+                id: 3,
+                title: "Art Gallery Opening Night",
+                date: "Fri, Jun 21",
+                time: "7:00 PM",
+                location: "Modern Art Museum, Chicago",
+                price: "Free",
+                category: "arts",
+                image: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=400&q=80",
+                lat: 54.6826,
+                lng: 25.2878
+            },
+            {
+                id: 4,
+                title: "Food & Wine Tasting Experience",
+                date: "Sat, Jun 29",
+                time: "6:00 PM",
+                location: "Vineyard Estate, Napa Valley",
+                price: "$85",
+                category: "food",
+                image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&q=80",
+                lat: 54.6894,
+                lng: 25.2808
+            },
+            {
+                id: 5,
+                title: "Marathon Run for Charity",
+                date: "Sun, Jul 14",
+                time: "6:00 AM",
+                location: "Downtown District, Boston",
+                price: "$35",
+                category: "charity",
+                image: "https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=400&q=80",
+                lat: 54.6761,
+                lng: 25.2539
+            },
+            {
+                id: 6,
+                title: "Comedy Night Live Show",
+                date: "Fri, Jun 28",
+                time: "8:00 PM",
+                location: "Comedy Club, Los Angeles",
+                price: "$25",
+                category: "music",
+                image: "https://images.unsplash.com/photo-1527224857830-43a7acc85260?w=400&q=80",
+                lat: 54.6850,
+                lng: 25.2750
+            },
+            {
+                id: 7,
+                title: "Business Leadership Workshop",
+                date: "Wed, Jul 3",
+                time: "10:00 AM",
+                location: "Conference Hall, Seattle",
+                price: "$150",
+                category: "education",
+                image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&q=80",
+                lat: 54.6950,
+                lng: 25.2600
+            },
+            {
+                id: 8,
+                title: "Jazz Night Under The Stars",
+                date: "Sat, Jul 6",
+                time: "8:00 PM",
+                location: "Rooftop Venue, Miami",
+                price: "$40",
+                category: "music",
+                image: "https://images.unsplash.com/photo-1511735111819-9a3f7709049c?w=400&q=80",
+                lat: 54.6800,
+                lng: 25.2900
+            }
+        ];
+
+        let currentFilter = null;
+        let currentCalendarDate = new Date();
+        
+        // Pending events (simulated)
+        const pendingEventsData = [
+            {
+                id: 101,
+                title: "Startup Pitch Night",
+                organizer: "John Doe",
+                date: "2025-11-15",
+                time: "6:00 PM",
+                location: "Tech Hub, Austin",
+                category: "business"
+            },
+            {
+                id: 102,
+                title: "Outdoor Yoga Session",
+                organizer: "Sarah Smith",
+                date: "2025-11-10",
+                time: "7:00 AM",
+                location: "Beach Park, Miami",
+                category: "charity"
+            },
+            {
+                id: 103,
+                title: "Photography Workshop",
+                organizer: "Mike Johnson",
+                date: "2025-11-20",
+                time: "2:00 PM",
+                location: "Studio A, New York",
+                category: "education"
+            }
+        ];
+
+        // Render events
+        function renderEvents(eventsToRender) {
+            const grid = document.getElementById('eventsGrid');
+            
+            if (eventsToRender.length === 0) {
+                grid.innerHTML = '<div class="loading">No events found</div>';
+                return;
+            }
+
+            grid.innerHTML = eventsToRender.map(event => `
+                <div class="event-card" onclick="viewEvent(${event.id})">
+                    <div class="event-card-wrapper">
+                        <img src="${event.image}" alt="${event.title}" class="event-image">
+                        <span class="event-price">${event.price}</span>
+                    </div>
+                    <div class="event-content">
+                        <h3 class="event-title">${event.title}</h3>
+                        <div class="event-detail">
+                            <span>📅</span>
+                            <span>${event.date}</span>
+                        </div>
+                        <div class="event-detail">
+                            <span>🕐</span>
+                            <span>${event.time}</span>
+                        </div>
+                        <div class="event-detail">
+                            <span>📍</span>
+                            <span>${event.location}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter by category
+        function filterByCategory(category) {
+            currentFilter = category;
+            const filtered = events.filter(event => event.category === category);
+            renderEvents(filtered);
+        }
+
+        // Search events
+        function searchEvents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const location = document.getElementById('locationInput').value.toLowerCase();
+            
+            const filtered = events.filter(event => {
+                const matchesSearch = !searchTerm || 
+                    event.title.toLowerCase().includes(searchTerm) ||
+                    event.category.toLowerCase().includes(searchTerm);
+                    
+                const matchesLocation = !location || 
+                    event.location.toLowerCase().includes(location);
+                    
+                return matchesSearch && matchesLocation;
+            });
+            
+            renderEvents(filtered);
+            
+            if (searchTerm || location) {
+                document.getElementById('events').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // View event details
+        function viewEvent(eventId) {
+            const event = events.find(e => e.id === eventId);
+            if (event) {
+                alert(`Event: ${event.title}\nDate: ${event.date}\nTime: ${event.time}\nLocation: ${event.location}\nPrice: ${event.price}`);
+            }
+        }
+
+        // Allow Enter key to search
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchEvents();
+            }
+        });
+
+        document.getElementById('locationInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchEvents();
+            }
+        });
+
+        // Handle registration form submission
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = {
+                fullName: formData.get('fullName'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                userType: formData.get('userType')
+            };
+            
+            // Display success message
+            alert(`✅ Registration Successful!\n\nWelcome, ${data.fullName}!\nAccount Type: ${data.userType.charAt(0).toUpperCase() + data.userType.slice(1)}\n\nYou can now start ${data.userType === 'organizer' ? 'creating events' : 'discovering events'}!`);
+            
+            // Reset form
+            event.target.reset();
+            
+            // Scroll to events section
+            document.getElementById('events').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Admin Panel Functions
+        function updateAdminStats() {
+            document.getElementById('totalEvents').textContent = events.length;
+            document.getElementById('pendingEvents').textContent = pendingEventsData.length;
+            document.getElementById('approvedEvents').textContent = events.length;
+        }
+
+        function renderPendingEvents() {
+            const container = document.getElementById('pendingEventsList');
+            
+            if (pendingEventsData.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 2rem;">No pending events</p>';
+                return;
+            }
+
+            container.innerHTML = pendingEventsData.map(event => `
+                <div class="pending-event-item" id="pending-${event.id}">
+                    <div class="pending-event-title">${event.title}</div>
+                    <div class="pending-event-details">
+                        👤 Organizer: ${event.organizer}<br>
+                        📅 ${event.date} at ${event.time}<br>
+                        📍 ${event.location}
+                    </div>
+                    <div class="pending-event-actions">
+                        <button class="btn-approve" onclick="approveEvent(${event.id})">✓ Approve</button>
+                        <button class="btn-reject" onclick="rejectEvent(${event.id})">✗ Reject</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approveEvent(eventId) {
+            const eventIndex = pendingEventsData.findIndex(e => e.id === eventId);
+            if (eventIndex !== -1) {
+                const approvedEvent = pendingEventsData[eventIndex];
+                
+                // Add to main events
+                const newEvent = {
+                    id: events.length + 1,
+                    title: approvedEvent.title,
+                    date: new Date(approvedEvent.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+                    time: approvedEvent.time,
+                    location: approvedEvent.location,
+                    price: "$25",
+                    category: approvedEvent.category,
+                    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80"
+                };
+                
+                events.push(newEvent);
+                pendingEventsData.splice(eventIndex, 1);
+                
+                renderPendingEvents();
+                updateAdminStats();
+                renderCalendar();
+                
+                alert(`✅ Event "${approvedEvent.title}" has been approved!`);
+            }
+        }
+
+        function rejectEvent(eventId) {
+            const eventIndex = pendingEventsData.findIndex(e => e.id === eventId);
+            if (eventIndex !== -1) {
+                const rejectedEvent = pendingEventsData[eventIndex];
+                pendingEventsData.splice(eventIndex, 1);
+                
+                renderPendingEvents();
+                updateAdminStats();
+                
+                alert(`❌ Event "${rejectedEvent.title}" has been rejected.`);
+            }
+        }
+
+        // Calendar Functions
+        function renderCalendar() {
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            // Update month display
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('calendarMonth').textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+            
+            const calendarGrid = document.getElementById('calendarGrid');
+            
+            // Day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            let calendarHTML = dayHeaders.map(day => 
+                `<div class="calendar-day-header">${day}</div>`
+            ).join('');
+            
+            // Previous month days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const day = daysInPrevMonth - i;
+                calendarHTML += `<div class="calendar-day other-month">${day}</div>`;
+            }
+            
+            // Current month days
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === month && today.getFullYear() === year;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const hasEvent = events.some(event => {
+                    const eventDate = new Date(event.date);
+                    return eventDate.getDate() === day && 
+                           eventDate.getMonth() === month && 
+                           eventDate.getFullYear() === year;
+                });
+                
+                const isToday = isCurrentMonth && today.getDate() === day;
+                const classes = ['calendar-day'];
+                if (isToday) classes.push('today');
+                if (hasEvent) classes.push('has-event');
+                
+                calendarHTML += `
+                    <div class="${classes.join(' ')}" title="${dateStr}">
+                        ${day}
+                        ${hasEvent ? '<div class="event-indicator"></div>' : ''}
+                    </div>
+                `;
+            }
+            
+            // Next month days
+            const remainingCells = 42 - (firstDay + daysInMonth);
+            for (let day = 1; day <= remainingCells; day++) {
+                calendarHTML += `<div class="calendar-day other-month">${day}</div>`;
+            }
+            
+            calendarGrid.innerHTML = calendarHTML;
+        }
+
+        function changeMonth(direction) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        // Show/hide sections based on hash
+        function handleNavigation() {
+            const hash = window.location.hash || '#events';
+            
+            // Hide all sections
+            document.getElementById('events').style.display = 'none';
+            document.querySelector('.registration-section').style.display = 'none';
+            document.getElementById('create-event').style.display = 'none';
+            document.getElementById('admin').style.display = 'none';
+            
+            // Show appropriate section
+            if (hash === '#register') {
+                document.querySelector('.registration-section').style.display = 'block';
+            } else if (hash === '#create-event') {
+                document.getElementById('create-event').style.display = 'block';
+            } else if (hash === '#admin') {
+                document.getElementById('admin').style.display = 'block';
+                renderPendingEvents();
+                updateAdminStats();
+                renderCalendar();
+            } else {
+                document.getElementById('events').style.display = 'block';
+            }
+        }
+
+        // Handle event creation form submission
+        function handleEventCreation(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = {
+                eventName: formData.get('eventName'),
+                eventCategory: formData.get('eventCategory'),
+                eventDate: formData.get('eventDate'),
+                eventTime: formData.get('eventTime'),
+                eventLocation: formData.get('eventLocation'),
+                eventPrice: formData.get('eventPrice'),
+                eventDescription: formData.get('eventDescription'),
+                eventImage: formData.get('eventImage') || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80'
+            };
+            
+            // Format date for display
+            const dateObj = new Date(data.eventDate);
+            const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            
+            // Format time for display
+            const timeObj = new Date(`2000-01-01T${data.eventTime}`);
+            const formattedTime = timeObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            
+            // Create new event object
+            const newEvent = {
+                id: events.length + 1,
+                title: data.eventName,
+                date: formattedDate,
+                time: formattedTime,
+                location: data.eventLocation,
+                price: data.eventPrice,
+                category: data.eventCategory,
+                image: data.eventImage
+            };
+            
+            // Add to events array
+            events.push(newEvent);
+            
+            // Display success message
+            alert(`✅ Event Created Successfully!\n\nEvent: ${data.eventName}\nCategory: ${data.eventCategory}\nDate: ${formattedDate}\nTime: ${formattedTime}\nLocation: ${data.eventLocation}\nPrice: ${data.eventPrice}\n\nYour event is now live on EventHub!`);
+            
+            // Reset form
+            event.target.reset();
+            
+            // Refresh events display and scroll to events section
+            renderEvents(events);
+            document.getElementById('events').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize Google Map
+        let map;
+        let markers = [];
+
+        function initMap() {
+            // Center on Vilnius, Lithuania
+            const vilnius = { lat: 54.6872, lng: 25.2797 };
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: vilnius,
+                styles: [
+                    {
+                        featureType: 'poi',
+                        elementType: 'labels',
+                        stylers: [{ visibility: 'off' }]
+                    }
+                ],
+                mapTypeControl: false,
+                streetViewControl: false,
+                fullscreenControl: true,
+            });
+
+            // Add markers for each event
+            events.forEach(event => {
+                const marker = new google.maps.Marker({
+                    position: { lat: event.lat, lng: event.lng },
+                    map: map,
+                    title: event.title,
+                    animation: google.maps.Animation.DROP,
+                });
+
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `
+                        <div class="map-marker-content">
+                            <div class="map-marker-title">${event.title}</div>
+                            <div class="map-marker-details">
+                                📅 ${event.date}<br>
+                                🕒 ${event.time}<br>
+                                📍 ${event.location}
+                            </div>
+                            <div class="map-marker-price">${event.price}</div>
+                        </div>
+                    `
+                });
+
+                marker.addListener('click', () => {
+                    // Close all other info windows
+                    markers.forEach(m => m.infoWindow.close());
+                    infoWindow.open(map, marker);
+                });
+
+                markers.push({ marker, infoWindow });
+            });
+        }
+
+        // Initialize: Load all events
+        window.addEventListener('DOMContentLoaded', function() {
+            // Get current user from localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            formData.organizerId = currentUser.id || 'user-' + Date.now();
+
+            // Save to localStorage
+            const events = JSON.parse(localStorage.getItem('pendingEvents') || '[]');
+            events.push(formData);
+            localStorage.setItem('pendingEvents', JSON.stringify(events));
+
+            // Show success message
+            document.getElementById('successMessage').classList.add('show');
+
+            // Reset form
+            this.reset();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                renderEvents(events);
+                handleNavigation();
+            }, 500);
+        });
+
+        // Handle hash changes
+        window.addEventListener('hashchange', handleNavigation);
+    </script>
+</body>
+</html>

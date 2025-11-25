@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mano Renginiai - Organizatoriaus Panelė</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .stat-card.approved h3 {
+            color: #10b981;
+        }
+
+        .stat-card.pending h3 {
+            color: #f59e0b;
+        }
+
+        .stat-card.total h3 {
+            color: #667eea;
+        }
+
+        .events-list {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .events-list h2 {
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .event-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border: 2px solid #f3f4f6;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .event-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .event-image {
+            width: 200px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .event-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .event-details {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .event-details span {
+            margin-right: 15px;
+            display: inline-block;
+        }
+
+        .event-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-badge.approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-view {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #5568d3;
+        }
+
+        .btn-edit {
+            background: #f3f4f6;
+            color: #333;
+        }
+
+        .btn-edit:hover {
+            background: #e5e7eb;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .event-item {
+                flex-direction: column;
+            }
+
+            .event-image {
+                width: 100%;
+                height: 200px;
+            }
+
+            .event-footer {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">
+            ← Grįžti į pagrindinį
+        </a>
+
+        <div class="header">
+            <h1>Mano Renginiai</h1>
+            <p>Peržiūrėkite ir valdykite savo pateiktus renginius</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card total">
+                <h3 id="totalCount">0</h3>
+                <p>Viso Renginių</p>
+            </div>
+            <div class="stat-card approved">
+                <h3 id="approvedCount">0</h3>
+                <p>Patvirtinti</p>
+            </div>
+            <div class="stat-card pending">
+                <h3 id="pendingCount">0</h3>
+                <p>Laukia Patvirtinimo</p>
+            </div>
+        </div>
+
+        <div class="events-list">
+            <h2>Pateikti Renginiai</h2>
+            <div id="eventsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const organizerEvents = [
+            {
+                id: "1",
+                title: "Vasaros Muzikos Festivalis 2025",
+                date: "2025-06-15",
+                time: "14:00",
+                location: "Centro Parkas, Vilnius",
+                image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&q=80",
+                price: "45€",
+                status: "approved",
+                submittedDate: "2025-05-01"
+            },
+            {
+                id: "2",
+                title: "Technologijų Konferencija: AI ir Ateitis",
+                date: "2025-07-08",
+                time: "09:00",
+                location: "Konferencijų Centras, Kaunas",
+                image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80",
+                price: "299€",
+                status: "approved",
+                submittedDate: "2025-05-05"
+            },
+            {
+                id: "7",
+                title: "Fotografijos Paroda: Lietuvos Gamta",
+                date: "2025-08-12",
+                time: "18:00",
+                location: "Nacionalinė Galerija, Vilnius",
+                image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80",
+                price: "Nemokama",
+                status: "pending",
+                submittedDate: "2025-05-18"
+            },
+            {
+                id: "8",
+                title: "Verslo Startuolių Mugė",
+                date: "2025-08-20",
+                time: "10:00",
+                location: "LitExpo, Vilnius",
+                image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&q=80",
+                price: "50€",
+                status: "pending",
+                submittedDate: "2025-05-20"
+            },
+            {
+                id: "9",
+                title: "Jaunimo Teatro Festivalis",
+                date: "2025-09-05",
+                time: "19:00",
+                location: "Nacionalinis Dramos Teatras, Vilnius",
+                image: "https://images.unsplash.com/photo-1507924538820-ede94a04019d?w=800&q=80",
+                price: "25€",
+                status: "approved",
+                submittedDate: "2025-05-10"
+            }
+        ];
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('lt-LT', options);
+        }
+
+        function getStatusText(status) {
+            return status === 'approved' ? 'Patvirtintas' : 'Laukia patvirtinimo';
+        }
+
+        function renderEvents() {
+            const container = document.getElementById('eventsContainer');
+
+            if (organizerEvents.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>Dar neturite pateiktų renginių</h3>
+                        <p>Pradėkite kurti savo pirmąjį renginį!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const total = organizerEvents.length;
+            const approved = organizerEvents.filter(e => e.status === 'approved').length;
+            const pending = organizerEvents.filter(e => e.status === 'pending').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('approvedCount').textContent = approved;
+            document.getElementById('pendingCount').textContent = pending;
+
+            container.innerHTML = organizerEvents.map(event => `
+                <div class="event-item">
+                    <img src="${event.image}" alt="${event.title}" class="event-image">
+                    <div class="event-content">
+                        <div>
+                            <h3 class="event-title">${event.title}</h3>
+                            <div class="event-details">
+                                <span>📅 ${formatDate(event.date)}</span>
+                                <span>🕐 ${event.time}</span>
+                                <span>📍 ${event.location}</span>
+                            </div>
+                            <div class="event-details">
+                                <span>💰 ${event.price}</span>
+                                <span>Pateikta: ${formatDate(event.submittedDate)}</span>
+                            </div>
+                        </div>
+                        <div class="event-footer">
+                            <span class="status-badge ${event.status}">
+                                ${getStatusText(event.status)}
+                            </span>
+                            <div class="event-actions">
+                                <a href="event-details.html?id=${event.id}" class="btn btn-view">Peržiūrėti</a>
+                                <button class="btn btn-edit" onclick="alert('Redagavimo funkcija bus pridėta')">Redaguoti</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        renderEvents();
+    </script>
+</body>
+</html>
